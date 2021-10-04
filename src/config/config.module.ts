@@ -8,7 +8,7 @@ import { ConfigService } from './config.service';
 
 @Module({
   providers: [ConfigService],
-  exports: [ConfigService]
+  exports: [ConfigService],
 })
 export class ConfigModule {
   static register(options?: NestConfigModuleOptions): DynamicModule {
@@ -17,10 +17,10 @@ export class ConfigModule {
       imports: [
         NestConfigModule.forRoot({
           ...options,
-          load: [config]
-        })
+          load: [config],
+        }),
       ],
-      global: !!options?.isGlobal
+      global: !!options?.isGlobal,
     };
   }
 }

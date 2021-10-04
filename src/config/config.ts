@@ -7,7 +7,7 @@ export const config = () => ({
     port: Number(process.env.APP_PORT) || 8080,
     environment: isProductionEnvironment()
       ? Environment.Production
-      : Environment.Development
+      : Environment.Development,
   },
   database: {
     type: process.env.DB_DRIVER,
@@ -15,14 +15,14 @@ export const config = () => ({
     port: Number(process.env.DB_PORT) || 3306,
     database: process.env.DB_NAME,
     username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD
+    password: process.env.DB_PASSWORD,
   },
   auth: {
     jwt: {
       secret: process.env.JWT_SECRET,
-      expiresIn: process.env.JWT_TTL
-    }
-  }
+      expiresIn: process.env.JWT_TTL,
+    },
+  },
 });
 
 export type Config = ReturnType<typeof config>;

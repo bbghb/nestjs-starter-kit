@@ -7,7 +7,7 @@ import { TokenPayload } from './interfaces';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   verifyCredentials(email: string, password: string) {

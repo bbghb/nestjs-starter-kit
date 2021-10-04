@@ -1,5 +1,5 @@
 import { IsEmail, IsString, Length } from 'class-validator';
-import { SameAs } from '../../common';
+import { MatchesProperty } from '../../common';
 
 export class SignUpRequestDTO {
   @Length(2, 50)
@@ -11,8 +11,8 @@ export class SignUpRequestDTO {
   @IsEmail()
   email: string;
 
-  @SameAs('passwordConfirmation')
   @Length(8)
+  @MatchesProperty('passwordConfirmation')
   password: string;
 
   @IsString()

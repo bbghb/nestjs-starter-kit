@@ -7,7 +7,9 @@ import { User } from './user.interface';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(UserEntity) private users: Repository<UserEntity>) {}
+  constructor(
+    @InjectRepository(UserEntity) private users: Repository<UserEntity>,
+  ) {}
 
   findById(id: number) {
     return this.users.findOne(id);
@@ -21,8 +23,6 @@ export class UsersService {
   async findByEmailAndPassword(email: string, password: string) {
     const user = await this.users.findOne({ where: { email } });
 
-    return user && await compare(password, user.password)
-      ? user
-      : null;
+    return user && (await compare(password, user.password)) ? user : null;
   }
 }

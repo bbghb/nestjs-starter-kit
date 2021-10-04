@@ -5,20 +5,20 @@ import { ConfigModule, ConfigService } from './config';
 import { UsersModule } from './users';
 import { AuthModule } from './auth';
 
-
 @Module({
   imports: [
     ConfigModule.register(),
 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: !configService.isProduction,
-        namingStrategy: new SnakeNamingStrategy()
-      } as TypeOrmModuleAsyncOptions),
-      inject: [ConfigService]
+      useFactory: (configService: ConfigService) =>
+        ({
+          ...configService.get('database'),
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: !configService.isProduction,
+          namingStrategy: new SnakeNamingStrategy(),
+        } as TypeOrmModuleAsyncOptions),
+      inject: [ConfigService],
     }),
 
     UsersModule,

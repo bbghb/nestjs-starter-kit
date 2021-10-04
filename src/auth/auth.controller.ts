@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { SignInRequestDTO, SignUpRequestDTO } from './dto';
 import { UsersService, UserEntity } from '../users';
 import { AuthResponseDTO } from './dto';
@@ -9,14 +16,14 @@ import { LocalGuard, JWTGuard } from './guards';
 export class AuthController {
   constructor(
     private usersService: UsersService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   @UseGuards(LocalGuard)
   @Post('sign-in')
   async login(
     @Body() dto: SignInRequestDTO,
-    @Request() request
+    @Request() request,
   ): Promise<AuthResponseDTO> {
     const { id } = request.user as UserEntity;
     const token = await this.authService.createToken({ id });
@@ -26,7 +33,9 @@ export class AuthController {
 
   @Post('sign-up')
   async register(@Body() dto: SignUpRequestDTO): Promise<AuthResponseDTO> {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { passwordConfirmation, ...data } = dto;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     const { id } = await this.usersService.create(data);
     const token = await this.authService.createToken({ id });
 

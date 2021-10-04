@@ -9,12 +9,12 @@ import { TokenPayload } from '../interfaces';
 export class JWTStrategy extends PassportStrategy(Strategy) {
   constructor(
     private authService: AuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get('auth.jwt.secret')
+      secretOrKey: configService.get('auth.jwt.secret'),
     });
   }
 
@@ -22,7 +22,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.getUserFromTokenPayload(payload);
 
     if (!user) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException();
     }
 
     return user;

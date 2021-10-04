@@ -17,13 +17,13 @@ import { ConfigModule, ConfigService } from '../config';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('auth.jwt.secret'),
         signOptions: {
-          expiresIn: configService.get('auth.jwt.expiresIn')
-        }
+          expiresIn: configService.get('auth.jwt.expiresIn'),
+        },
       }),
-      inject: [ConfigService]
-    })
+      inject: [ConfigService],
+    }),
   ],
   providers: [AuthService, LocalStrategy, JWTStrategy],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}
