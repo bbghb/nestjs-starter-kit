@@ -8,9 +8,7 @@ import { AuthModule } from './auth';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true
-    }),
+    ConfigModule.register(),
 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

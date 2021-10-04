@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '../config';
   imports: [
     UsersModule,
     PassportModule,
+    ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
