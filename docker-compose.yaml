@@ -1,0 +1,28 @@
+services:
+  nestjs:
+    image: demoiradimo/nestjs-starter-kit
+    container_name: nestjs
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:${APP_PORT}
+    restart: unless-stopped
+    depends_on:
+      - db
+  db:
+    image: mariadb:10
+    container_name: nestjs-db
+    restart: always
+    ports:
+      - 3307:${DB_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - nestjs-mariadb:/var/lib/mysql
+
+volumes:
+  nestjs-mariadb:
