@@ -20,9 +20,21 @@ export class UsersService {
     return this.users.save({ ...user, password });
   }
 
+  findByEmail(email: string) {
+    return this.users.findOne({ where: { email } });
+  }
+
   async findByEmailAndPassword(email: string, password: string) {
-    const user = await this.users.findOne({ where: { email } });
+    const user = await this.findByEmail(email);
 
     return user && (await compare(password, user.password)) ? user : null;
+  }
+
+  async verifyEmail(email: string) {
+    const updateResult = await this.users.update(
+      { email },
+      { isEmailVerified: true },
+    );
+    return !!updateResult.affected;
   }
 }

@@ -22,6 +22,10 @@ export const config = () => ({
       secret: process.env.JWT_SECRET,
       expiresIn: process.env.JWT_TTL,
     },
+    emailVerification: {
+      url: process.env.EMAIL_VERIFICATION_URL,
+      expiresIn: process.env.EMAIL_VERIFICATION_URL_TTL,
+    },
   },
 });
 

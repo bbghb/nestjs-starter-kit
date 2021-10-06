@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy, JWTStrategy } from './strategies';
 import { ConfigModule, ConfigService } from '../config';
+import { EmailVerificationService } from './email-verification.service';
+import { EmailVerificationController } from './email-verification.controller';
 
 @Module({
   imports: [
@@ -23,7 +25,12 @@ import { ConfigModule, ConfigService } from '../config';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, LocalStrategy, JWTStrategy],
-  controllers: [AuthController],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JWTStrategy,
+    EmailVerificationService,
+  ],
+  controllers: [AuthController, EmailVerificationController],
 })
 export class AuthModule {}
