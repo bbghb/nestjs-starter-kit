@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users';
 import { AuthController } from './auth.controller';
@@ -8,6 +8,16 @@ import { LocalStrategy, JWTStrategy } from './strategies';
 import { ConfigModule, ConfigService } from '../config';
 import { EmailVerificationService } from './email-verification.service';
 import { EmailVerificationController } from './email-verification.controller';
+import { MailsModule } from '../mails';
+
+function jwtOptionsFactory(configService: ConfigService): JwtModuleOptions {
+  return {
+    secret: configService.get('auth.jwt.secret'),
+    signOptions: {
+      expiresIn: configService.get('auth.jwt.expiresIn'),
+    },
+  };
+}
 
 @Module({
   imports: [
@@ -16,14 +26,10 @@ import { EmailVerificationController } from './email-verification.controller';
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get('auth.jwt.secret'),
-        signOptions: {
-          expiresIn: configService.get('auth.jwt.expiresIn'),
-        },
-      }),
+      useFactory: jwtOptionsFactory,
       inject: [ConfigService],
     }),
+    MailsModule
   ],
   providers: [
     AuthService,

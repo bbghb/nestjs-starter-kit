@@ -27,6 +27,15 @@ export const config = () => ({
       expiresIn: process.env.EMAIL_VERIFICATION_URL_TTL,
     },
   },
+  mail: {
+    host: process.env.MAIL_HOST,
+    port: Number(process.env.MAIL_PORT),
+    auth: {
+      user: process.env.MAIL_USER,
+      password: process.env.MAIL_PASSWORD,
+    },
+    from: process.env.MAIL_FROM || `"No Reply" <${process.env.MAIL_USER}>`,
+  },
 });
 
 export type Config = ReturnType<typeof config>;
