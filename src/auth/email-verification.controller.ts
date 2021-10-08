@@ -1,8 +1,6 @@
 import {
-  BadRequestException,
   Body,
   Controller,
-  InternalServerErrorException,
   Post,
   Request,
   UseGuards,
@@ -10,7 +8,7 @@ import {
 import { UserEntity } from '../users';
 import { EmailVerificationService } from './email-verification.service';
 import { EmailVerificationRequestDTO } from './dto';
-import { JWTGuard } from './guards';
+import { JWTGuard, UnverifiedEmailGuard } from './guards';
 
 @Controller()
 export class EmailVerificationController {
@@ -18,26 +16,17 @@ export class EmailVerificationController {
 
   @Post('email-verifications')
   async verifyEmail(@Body() dto: EmailVerificationRequestDTO) {
-    const isVerified = await this.verificationService.verifyFromToken(
-      dto.token,
-    );
-
-    if (!isVerified) {
-      throw new InternalServerErrorException();
-    }
+    await this.verificationService.verifyFromToken(dto.token);
 
     return null;
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, UnverifiedEmailGuard)
   @Post('email-verification-links')
   async resendVerificationLink(@Request() request) {
     const user = request.user as UserEntity;
+    await this.verificationService.sendVerificationLink(user.email);
 
-    if (user.isEmailVerified) {
-      throw new BadRequestException();
-    }
-
-    return this.verificationService.sendVerificationLink(user.email);
+    return null;
   }
 }

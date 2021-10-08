@@ -1,9 +1,9 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
 import { VerificationTokenPayload } from './interfaces';
 import { ConfigService } from '../config';
+import { MailsService } from '../mails';
 
 
 @Injectable()
@@ -11,8 +11,8 @@ export class EmailVerificationService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
-    private mailer: MailerService,
-    private config: ConfigService,
+    private mailsService: MailsService,
+    private configService: ConfigService,
   ) {}
 
   async sendVerificationLink(email: string) {
@@ -20,14 +20,10 @@ export class EmailVerificationService {
     const link = this.createVerificationLink(token);
     const { firstName } = await this.usersService.findByEmail(email);
 
-    return this.mailer.sendMail({
-      to: email,
-      subject: 'Verify Email Address',
-      template: './email-verification',
-      context: {
-        firstName,
-        link,
-      }
+    return this.mailsService.sendEmailVerificationMail({
+      email,
+      firstName,
+      link
     });
   }
 
@@ -43,7 +39,7 @@ export class EmailVerificationService {
   }
 
   private createVerificationToken(email: string) {
-    const signOptions = { expiresIn: this.config.get('auth.emailVerification.expiresIn') };
+    const signOptions = { expiresIn: this.configService.get('auth.emailVerification.expiresIn') };
 
     return this.jwtService.signAsync(
       { email },
@@ -52,6 +48,6 @@ export class EmailVerificationService {
   }
 
   private createVerificationLink(token: string) {
-    return `${this.config.get('auth.emailVerification.url')}?token=${token}`;
+    return `${this.configService.get('auth.emailVerification.url')}?token=${token}`;
   }
 }

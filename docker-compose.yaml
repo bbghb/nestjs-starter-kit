@@ -23,6 +23,14 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - nestjs-mariadb:/var/lib/mysql
+  mailer:
+    image: mailhog/mailhog
+    container_name: nestjs-mailhog
+    ports:
+     - 1025:1025
+     - 8025:8025
+    logging:
+      driver: 'none'
 
 volumes:
   nestjs-mariadb:
