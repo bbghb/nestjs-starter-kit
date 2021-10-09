@@ -22,6 +22,19 @@ export const config = () => ({
       secret: process.env.JWT_SECRET,
       expiresIn: process.env.JWT_TTL,
     },
+    emailVerification: {
+      url: process.env.EMAIL_VERIFICATION_URL,
+      expiresIn: process.env.EMAIL_VERIFICATION_URL_TTL,
+    },
+  },
+  mail: {
+    host: process.env.MAIL_HOST,
+    port: Number(process.env.MAIL_PORT),
+    auth: {
+      user: process.env.MAIL_USER,
+      password: process.env.MAIL_PASSWORD,
+    },
+    from: process.env.MAIL_FROM || `"No Reply" <${process.env.MAIL_USER}>`,
   },
 });
 

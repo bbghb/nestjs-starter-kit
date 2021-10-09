@@ -11,12 +11,14 @@ import { UsersService, UserEntity } from '../users';
 import { AuthResponseDTO } from './dto';
 import { AuthService } from './auth.service';
 import { LocalGuard, JWTGuard } from './guards';
+import { EmailVerificationService } from './email-verification.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
+    private verificationService: EmailVerificationService
   ) {}
 
   @UseGuards(LocalGuard)
@@ -36,8 +38,9 @@ export class AuthController {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const { passwordConfirmation, ...data } = dto;
     /* eslint-enable @typescript-eslint/no-unused-vars */
-    const { id } = await this.usersService.create(data);
+    const { id, email } = await this.usersService.create(data);
     const token = await this.authService.createToken({ id });
+    await this.verificationService.sendVerificationLink(email);
 
     return { token };
   }
