@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
-import { VerificationTokenPayload } from './interfaces';
 import { ConfigService } from '../config';
 import { MailsService } from '../mails';
-
+import { InvalidTokenException } from './exceptions';
 
 @Injectable()
 export class EmailVerificationService {
@@ -28,14 +27,15 @@ export class EmailVerificationService {
   }
 
   async verifyFromToken(token: string) {
-    const { email } = await this.jwtService.verifyAsync<VerificationTokenPayload>(token);
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.getUserFromToken(token);
 
-    if (!user || user.isEmailVerified) {
-      throw new BadRequestException();
+    if (!user) {
+      throw new InvalidTokenException();
     }
 
-    return this.usersService.verifyEmail(email);
+    if (!user.isEmailVerified) {
+      return this.usersService.verifyEmail(user.email);
+    }
   }
 
   private createVerificationToken(email: string) {
@@ -49,5 +49,18 @@ export class EmailVerificationService {
 
   private createVerificationLink(token: string) {
     return `${this.configService.get('auth.emailVerification.url')}?token=${token}`;
+  }
+
+
+  private async getUserFromToken(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+
+      return payload?.email
+        ? this.usersService.findByEmail(payload.email)
+        : null;
+    } catch (e) {
+      return null;
+    }
   }
 }

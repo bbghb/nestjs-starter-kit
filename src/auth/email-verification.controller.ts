@@ -1,14 +1,15 @@
 import {
   Body,
   Controller,
+  NotAcceptableException,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { UserEntity } from '../users';
 import { EmailVerificationService } from './email-verification.service';
 import { EmailVerificationRequestDTO } from './dto';
-import { JWTGuard, UnverifiedEmailGuard } from './guards';
+import { JWTGuard } from './guards';
+import { UserEntity } from '../users';
 
 @Controller()
 export class EmailVerificationController {
@@ -21,10 +22,14 @@ export class EmailVerificationController {
     return null;
   }
 
-  @UseGuards(JWTGuard, UnverifiedEmailGuard)
   @Post('email-verification-links')
+  @UseGuards(JWTGuard)
   async resendVerificationLink(@Request() request) {
     const user = request.user as UserEntity;
+    if (user.isEmailVerified) {
+      throw new NotAcceptableException();
+    }
+
     await this.verificationService.sendVerificationLink(user.email);
 
     return null;

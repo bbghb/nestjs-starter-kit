@@ -35,6 +35,7 @@ export class UsersService {
       { email },
       { isEmailVerified: true },
     );
+
     return !!updateResult.affected;
   }
 }
