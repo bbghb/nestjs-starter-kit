@@ -1,4 +1,9 @@
-import { Body, Controller, Post, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { UsersService } from '../users';
 import { PasswordResetsService } from './password-resets.service';
 import { PasswordResetLinkRequestDTO, PasswordResetRequestDTO } from './dto';
@@ -19,8 +24,8 @@ export class PasswordResetsController {
     if (!user) {
       throw new UnprocessableEntityException({
         errors: {
-          email: [EMAIL_NOT_FOUND_ERROR]
-        }
+          email: [EMAIL_NOT_FOUND_ERROR],
+        },
       });
     }
 
@@ -38,7 +43,7 @@ export class PasswordResetsController {
     } catch (e) {
       throw new UnprocessableEntityException({
         errors: {
-          code: [INVALID_RESET_CODE_ERROR]
+          code: [INVALID_RESET_CODE_ERROR],
         },
       });
     }

@@ -11,7 +11,8 @@ import { MailsService } from '../mails';
 @Injectable()
 export class PasswordResetsService {
   constructor(
-    @InjectRepository(PasswordResetEntity) private resets: Repository<PasswordResetEntity>,
+    @InjectRepository(PasswordResetEntity)
+    private resets: Repository<PasswordResetEntity>,
     private mailsService: MailsService,
     private configService: ConfigService,
     private jwtService: JwtService,
@@ -21,7 +22,7 @@ export class PasswordResetsService {
   async sendResetLink(user: UserEntity) {
     const [code, reset] = await Promise.all([
       this.createResetCode(user.id),
-      this.resets.findOne({ user })
+      this.resets.findOne({ user }),
     ]);
 
     if (reset) {
@@ -33,7 +34,7 @@ export class PasswordResetsService {
     return this.mailsService.sendPasswordResetMail({
       email: user.email,
       firstName: user.firstName,
-      link: this.createResetLink(code)
+      link: this.createResetLink(code),
     });
   }
 
@@ -62,8 +63,11 @@ export class PasswordResetsService {
   }
 
   private getResetFromCode(code: string) {
-    return this.jwtService.verifyAsync<{id: number}>(code)
-      .then(({ id }) => this.resets.findOne({ where: { userId: id }, relations: ['user'] }))
+    return this.jwtService
+      .verifyAsync<{ id: number }>(code)
+      .then(({ id }) =>
+        this.resets.findOne({ where: { userId: id }, relations: ['user'] }),
+      )
       .catch(() => null);
   }
 }

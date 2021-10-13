@@ -39,9 +39,6 @@ function jwtOptionsFactory(configService: ConfigService): JwtModuleOptions {
     JWTStrategy,
     EmailVerificationService,
   ],
-  controllers: [
-    AuthController,
-    EmailVerificationController,
-  ],
+  controllers: [AuthController, EmailVerificationController],
 })
 export class AuthModule {}

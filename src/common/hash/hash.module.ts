@@ -5,10 +5,10 @@ import { HashService, SALT_ROUNDS } from './hash.service';
   providers: [
     {
       provide: SALT_ROUNDS,
-      useValue: 10
+      useValue: 10,
     },
     HashService,
   ],
-  exports: [HashService]
+  exports: [HashService],
 })
 export class HashModule {}

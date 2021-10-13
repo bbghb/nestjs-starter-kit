@@ -14,7 +14,7 @@ function typeOrmOptionsFactory(configService: ConfigService) {
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: !configService.isProduction,
     namingStrategy: new SnakeNamingStrategy(),
-  } as  TypeOrmModuleAsyncOptions;
+  } as TypeOrmModuleAsyncOptions;
 }
 
 @Module({

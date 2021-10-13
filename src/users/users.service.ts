@@ -9,7 +9,7 @@ import { User } from './user.interface';
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity) private users: Repository<UserEntity>,
-    private hash: HashService
+    private hash: HashService,
   ) {}
 
   findById(id: number) {
@@ -28,7 +28,9 @@ export class UsersService {
   async findByEmailAndPassword(email: string, password: string) {
     const user = await this.findByEmail(email);
 
-    return user && (await this.hash.compare(password, user.password)) ? user : null;
+    return user && (await this.hash.compare(password, user.password))
+      ? user
+      : null;
   }
 
   async verifyEmail(email: string) {

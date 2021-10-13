@@ -26,10 +26,7 @@ import { ConfigModule, ConfigService } from '../config';
     }),
   ],
   providers: [PasswordResetsService],
-  exports: [
-    TypeOrmModule,
-    PasswordResetsService,
-  ],
+  exports: [TypeOrmModule, PasswordResetsService],
   controllers: [PasswordResetsController],
 })
 export class PasswordResetsModule {}
