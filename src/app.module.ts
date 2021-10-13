@@ -4,26 +4,30 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ConfigModule, ConfigService } from './config';
 import { UsersModule } from './users';
 import { AuthModule } from './auth';
+import { PasswordResetsModule } from './password-resets';
+
+function typeOrmOptionsFactory(configService: ConfigService) {
+  const config = configService.get('database');
+
+  return {
+    ...config,
+    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    synchronize: !configService.isProduction,
+    namingStrategy: new SnakeNamingStrategy(),
+  } as  TypeOrmModuleAsyncOptions;
+}
 
 @Module({
   imports: [
     ConfigModule.register(),
-
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) =>
-        ({
-          ...configService.get('database'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: !configService.isProduction,
-          namingStrategy: new SnakeNamingStrategy(),
-        } as TypeOrmModuleAsyncOptions),
+      useFactory: typeOrmOptionsFactory,
       inject: [ConfigService],
     }),
-
     UsersModule,
-
     AuthModule,
+    PasswordResetsModule,
   ],
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ import { SignInRequestDTO, SignUpRequestDTO } from './dto';
 import { UsersService, UserEntity } from '../users';
 import { AuthResponseDTO } from './dto';
 import { AuthService } from './auth.service';
-import { LocalGuard, JWTGuard } from './guards';
+import { LocalGuard } from './guards';
 import { EmailVerificationService } from './email-verification.service';
 
 @Controller('auth')
@@ -21,33 +21,33 @@ export class AuthController {
     private verificationService: EmailVerificationService
   ) {}
 
+  @Post('login')
   @UseGuards(LocalGuard)
-  @Post('sign-in')
   async login(
     @Body() dto: SignInRequestDTO,
     @Request() request,
   ): Promise<AuthResponseDTO> {
-    const { id } = request.user as UserEntity;
+    const { id, email, firstName, lastName } = request.user as UserEntity;
     const token = await this.authService.createToken({ id });
 
-    return { token };
+    return {
+      token,
+      user: { id, email, firstName, lastName }
+    };
   }
 
-  @Post('sign-up')
+  @Post('register')
   async register(@Body() dto: SignUpRequestDTO): Promise<AuthResponseDTO> {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const { passwordConfirmation, ...data } = dto;
     /* eslint-enable @typescript-eslint/no-unused-vars */
-    const { id, email } = await this.usersService.create(data);
+    const { id, email, firstName, lastName } = await this.usersService.create(data);
     const token = await this.authService.createToken({ id });
     await this.verificationService.sendVerificationLink(email);
 
-    return { token };
-  }
-
-  @UseGuards(JWTGuard)
-  @Get('user')
-  user(@Request() request) {
-    return request.user;
+    return {
+      token,
+      user: { id, email, firstName, lastName }
+    };
   }
 }

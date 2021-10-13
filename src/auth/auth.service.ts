@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
-import { TokenPayload } from './interfaces';
+import { AuthTokenPayload } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -14,11 +14,11 @@ export class AuthService {
     return this.usersService.findByEmailAndPassword(email, password);
   }
 
-  createToken(payload: TokenPayload) {
+  createToken(payload: AuthTokenPayload) {
     return this.jwtService.signAsync(payload);
   }
 
-  getUserFromTokenPayload(payload: TokenPayload) {
+  getUserFromTokenPayload(payload: AuthTokenPayload) {
     return this.usersService.findById(payload.id);
   }
 }

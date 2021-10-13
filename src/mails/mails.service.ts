@@ -18,4 +18,17 @@ export class MailsService {
       }
     });
   }
+
+  sendPasswordResetMail(payload: { email: string; firstName: string; link: string }) {
+    const { email, firstName, link } = payload;
+
+    return this.mailer.sendMail({
+      to: email,
+      template: './password-reset',
+      context: {
+        firstName,
+        link
+      }
+    });
+  }
 }

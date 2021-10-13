@@ -26,6 +26,10 @@ export const config = () => ({
       url: process.env.EMAIL_VERIFICATION_URL,
       expiresIn: process.env.EMAIL_VERIFICATION_URL_TTL,
     },
+    passwordResets: {
+      url: process.env.PASSWORD_RESET_URL,
+      expiresIn: Number(process.env.PASSWORD_RESET_CODE_TTL),
+    },
   },
   mail: {
     host: process.env.MAIL_HOST,
