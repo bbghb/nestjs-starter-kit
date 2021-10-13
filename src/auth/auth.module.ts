@@ -11,10 +11,12 @@ import { EmailVerificationController } from './email-verification.controller';
 import { MailsModule } from '../mails';
 
 function jwtOptionsFactory(configService: ConfigService): JwtModuleOptions {
+  const config = configService.get('auth.jwt');
+
   return {
-    secret: configService.get('auth.jwt.secret'),
+    secret: config.secret,
     signOptions: {
-      expiresIn: configService.get('auth.jwt.expiresIn'),
+      expiresIn: config.expiresIn,
     },
   };
 }
@@ -29,7 +31,7 @@ function jwtOptionsFactory(configService: ConfigService): JwtModuleOptions {
       useFactory: jwtOptionsFactory,
       inject: [ConfigService],
     }),
-    MailsModule
+    MailsModule,
   ],
   providers: [
     AuthService,

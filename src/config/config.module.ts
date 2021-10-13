@@ -3,8 +3,8 @@ import {
   ConfigModule as NestConfigModule,
   ConfigModuleOptions as NestConfigModuleOptions,
 } from '@nestjs/config';
-import { config } from './config';
 import { ConfigService } from './config.service';
+import { config } from './config';
 
 @Module({
   providers: [ConfigService],

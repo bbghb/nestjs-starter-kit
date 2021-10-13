@@ -36,7 +36,7 @@ function mailerOptionsFactory(configService: ConfigService): MailerOptions {
       imports: [ConfigModule],
       useFactory: mailerOptionsFactory,
       inject: [ConfigService],
-    })
+    }),
   ],
   providers: [MailsService],
   exports: [MailsService],

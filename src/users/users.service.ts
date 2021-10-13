@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compare, hash } from 'bcrypt';
+import { HashService } from '../common';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { User } from './user.interface';
@@ -9,6 +9,7 @@ import { User } from './user.interface';
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity) private users: Repository<UserEntity>,
+    private hash: HashService,
   ) {}
 
   findById(id: number) {
@@ -16,7 +17,7 @@ export class UsersService {
   }
 
   async create(user: User) {
-    const password = await hash(user.password, 10);
+    const password = await this.hash.make(user.password);
     return this.users.save({ ...user, password });
   }
 
@@ -27,7 +28,9 @@ export class UsersService {
   async findByEmailAndPassword(email: string, password: string) {
     const user = await this.findByEmail(email);
 
-    return user && (await compare(password, user.password)) ? user : null;
+    return user && (await this.hash.compare(password, user.password))
+      ? user
+      : null;
   }
 
   async verifyEmail(email: string) {
@@ -37,5 +40,11 @@ export class UsersService {
     );
 
     return !!updateResult.affected;
+  }
+
+  async updatePassword(id: number, password: string) {
+    const hash = await this.hash.make(password);
+
+    return this.users.update({ id }, { password: hash });
   }
 }

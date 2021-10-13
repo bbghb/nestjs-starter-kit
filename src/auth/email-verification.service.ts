@@ -22,7 +22,7 @@ export class EmailVerificationService {
     return this.mailsService.sendEmailVerificationMail({
       email,
       firstName,
-      link
+      link,
     });
   }
 
@@ -39,18 +39,18 @@ export class EmailVerificationService {
   }
 
   private createVerificationToken(email: string) {
-    const signOptions = { expiresIn: this.configService.get('auth.emailVerification.expiresIn') };
+    const signOptions = {
+      expiresIn: this.configService.get('auth.emailVerification.expiresIn'),
+    };
 
-    return this.jwtService.signAsync(
-      { email },
-      signOptions
-    );
+    return this.jwtService.signAsync({ email }, signOptions);
   }
 
   private createVerificationLink(token: string) {
-    return `${this.configService.get('auth.emailVerification.url')}?token=${token}`;
+    return `${this.configService.get(
+      'auth.emailVerification.url',
+    )}?token=${token}`;
   }
-
 
   private async getUserFromToken(token: string) {
     try {
